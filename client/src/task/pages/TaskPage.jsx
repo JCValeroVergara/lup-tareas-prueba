@@ -1,8 +1,12 @@
+import { TasksKanban } from '../components';
+import { TaskLayout } from '../layout/TaskLayout';
 
 export const TaskPage = () => {
     return (
         <>
-            <h1>TaskPage</h1>
+            <TaskLayout>
+                <TasksKanban />
+            </TaskLayout>
         </>
     );
 };
