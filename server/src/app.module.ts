@@ -5,6 +5,7 @@ import { AuthModule } from './auth-users/auth.module';
 import { CommonModule } from './common/common.module';
 import { TaskModule } from './task/task.module';
 import { UsersModule } from './users/users.module';
+import { SeedModule } from './seed/seed.module';
 
 
 @Module({
@@ -29,6 +30,8 @@ import { UsersModule } from './users/users.module';
         TaskModule,
 
         UsersModule,
+
+        SeedModule,
     ],
     controllers: [],
     providers: [],
