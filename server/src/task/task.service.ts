@@ -1,26 +1,80 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Task } from './entities';
+import { Repository } from 'typeorm';
+import { PaginationDto } from 'src/common/dtos';
+import { User } from 'src/users/entities';
 
 @Injectable()
 export class TaskService {
-    create(createTaskDto: CreateTaskDto) {
-        return 'This action adds a new task';
+
+    constructor(
+        @InjectRepository(Task)
+        private readonly taskRepository: Repository<Task>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
+    ) { }
+    
+    private async findTaskById(id: string): Promise<Task> {
+        const task = await this.taskRepository.findOne({ where: { id } });
+        if (!task) {
+            throw new BadRequestException(`Tarea con Id: ${id} no encontrada`);
+        }
+        return task;
     }
 
-    findAll() {
-        return `This action returns all task`;
+    async create(createTaskDto: CreateTaskDto): Promise<Task> {
+        try {
+            const user = await this.userRepository.findOne({ where: { id: createTaskDto.userId } });
+            if (!user) {
+                throw new BadRequestException(`Usuario con Id: ${createTaskDto.userId} no encontrado`);
+            }
+
+            delete user.password;
+            delete user.email;
+
+            const task = this.taskRepository.create({
+                ...createTaskDto,
+                user
+            });
+            await this.taskRepository.save(task);
+
+            return task;
+        } catch (error) {
+            throw new BadRequestException(error.message);
+        }
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} task`;
+    async findAll(paginationDto: PaginationDto): Promise<Task[]> {
+        const { limit, offset } = paginationDto;
+        return await this.taskRepository.find({
+            skip: offset,
+            take: limit
+        });
     }
 
-    update(id: number, updateTaskDto: UpdateTaskDto) {
-        return `This action updates a #${id} task`;
+    async findOne(id: string): Promise<Task> {
+        const task = await this.findTaskById(id);
+        return task;
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} task`;
+    async update(id: string, updateTaskDto: UpdateTaskDto) {
+        const task = await this.findTaskById(id);
+        
+        Object.assign(task, updateTaskDto);
+        const taskUpdated = await this.taskRepository.save(task);
+
+        return taskUpdated;
+    }
+
+    async remove(id: string) {
+        await this.findTaskById(id);
+        await this.taskRepository.delete(id);
+
+        return {
+            message: `Tarea con Id: ${id} eliminada`
+        }
     }
 }

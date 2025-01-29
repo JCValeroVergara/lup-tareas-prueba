@@ -66,7 +66,12 @@ export class UsersService {
     }
 
     async findOne(id: string): Promise<User> {
-        const user = await this.findUserById(id);
+        const user = await this.usersRepository.findOne({
+            where: { id },
+            relations: ['tasks'],
+        });
+        if (!user) 
+            throw new NotFoundException(`Usuario con Id: ${id} no encontrado`);
         delete user.password;
 
         return user;
@@ -81,18 +86,18 @@ export class UsersService {
     }
 
     async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-        await this.findUserById(id);
+        const user = await this.findUserById(id);
 
         if (updateUserDto.password) {
             updateUserDto.password = bcrypt.hashSync(updateUserDto.password, 10);
         }
 
-        await this.usersRepository.update(id, updateUserDto);
+        Object.assign(user, updateUserDto);
 
-        const userUpdated = await this.usersRepository.findOne({ where: { id } });
-        delete userUpdated.password;
+        await this.usersRepository.save(user);
+        delete user.password;
 
-        return userUpdated;
+        return user;
     }
 
     async remove(id: string) {
