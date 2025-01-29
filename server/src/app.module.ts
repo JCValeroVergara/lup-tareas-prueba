@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthUsersModule } from './auth-users/auth-users.module';
+import { AuthModule } from './auth-users/auth.module';
 import { CommonModule } from './common/common.module';
 import { TaskModule } from './task/task.module';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -21,11 +22,13 @@ import { TaskModule } from './task/task.module';
             synchronize: true,
         }),
 
-        AuthUsersModule,
+        AuthModule,
 
         CommonModule,
 
         TaskModule,
+
+        UsersModule,
     ],
     controllers: [],
     providers: [],
