@@ -31,7 +31,6 @@ export const LoginPage = () => {
         event.preventDefault();
         setIsSubmitting(true);
         if (!isFormValid) return;
-        console.log({ email, password });
         dispatch(starLoginWithEmailAndPassword(email, password));
     };
 

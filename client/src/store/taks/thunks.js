@@ -51,7 +51,9 @@ export const StartAddTask = (taskData) => {
 }
 
 export const StartUpdateTask = (taskId, updatedData) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+
+        const  { token } = getState().auth;
         
         dispatch(setLoading());
         try {
@@ -59,7 +61,7 @@ export const StartUpdateTask = (taskId, updatedData) => {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${getState().auth.token}`,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(updatedData),
             });
@@ -75,7 +77,10 @@ export const StartUpdateTask = (taskId, updatedData) => {
 }
 
 export const StartDeleteTask = (taskId) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+
+        const  { token } = getState().auth;
+
         dispatch(setLoading());
 
         try {
@@ -83,7 +88,7 @@ export const StartDeleteTask = (taskId) => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${getState().auth.token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             if (!response.ok) {
