@@ -85,6 +85,12 @@ Para probar la aplicación, se han creado los siguientes usuarios de prueba:
 | prueba2@gmail.com | Ab1234     |
 | prueba3@gmail.com | Ab1234     |
 
+## Documentación de la REST api
+```
+    http://localhost:<PUERTO>/api-docs
+```
+
+
 ## Métricas del Dashboard
 
 El dashboard analítico ofrece insights sobre la productividad del usuario mediante las siguientes métricas:
