@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import { useForm } from '../../hooks';
 import { AuthLayout } from '../layout';
 import { AlertMessage } from '../../ui';
-import { Link } from 'react-router-dom';
+import { startRegisterWithEmailAndPassword } from '../../store/auth';
 
 const formData = {
     email: '',
@@ -17,15 +20,20 @@ const formValidations = {
 };
 
 export const RegisterPage = () => {
+    const dispatch = useDispatch();
+    const { status, errorMessage } = useSelector((state) => state.auth);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { email, password, name, onInputChange, isFormValid, emailValid, passwordValid, nameValid } = useForm(formData, formValidations);
+
+    const isAuthenticating = useMemo(() => status === 'checking', [status]);
     
     const handleSubmit = (event) => {
         event.preventDefault();
         setIsSubmitting(true);
         if (!isFormValid) return;
         console.log({ email, password, name });
+        dispatch(startRegisterWithEmailAndPassword(email, password, name));
     };
 
     return (
@@ -84,10 +92,13 @@ export const RegisterPage = () => {
                         </label>
                         {/* Mensaje de error para el nombre */}
                         {nameValid !== null && isSubmitting && <AlertMessage errorMsg={nameValid} />}
+                        {/* Mensaje de error del servidor */}
+                        {errorMessage && <AlertMessage errorMsg={errorMessage} />}
                     </div>
                     <div className="relative z-0 w-full mb-5 group flex items-center justify-between">
                         <button
                             type="submit"
+                            disabled={isAuthenticating}
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-32 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
                             Registro

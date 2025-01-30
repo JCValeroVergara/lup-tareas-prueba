@@ -1,3 +1,4 @@
+import { clearTasksLogout, StartLoadingTasks } from '../taks';
 import { checkingCredentials, login, logout } from './';
 
 const URL = import.meta.env.VITE_API_URL;
@@ -18,6 +19,7 @@ export const validateLocalStorage = () => {
                 name: localStorage.getItem('name'),
                 token,
             })));
+            dispatch(StartLoadingTasks());
         } else {
             dispatch(logout({}));
         }
@@ -37,8 +39,8 @@ export const starLoginWithEmailAndPassword = (email, password) => {
             });
 
             if (!response.ok) {
-                const { error } = await response.json();
-                dispatch(logout({ errorMessage: error }));
+                const { message } = await response.json();
+                dispatch(logout({ errorMessage: message }));
                 return;
             }
 
@@ -49,11 +51,14 @@ export const starLoginWithEmailAndPassword = (email, password) => {
             localStorage.setItem('email', data.user.email);
             localStorage.setItem('name', data.user.name);
 
+
+
             dispatch(login({ uid: data.user.id, email: data.user.email, name: data.user.name, token: data.token }));
+            dispatch(StartLoadingTasks());
 
         } catch (error) {
             console.error(error);
-            dispatch(logout({ errorMessage: 'Error al iniciar sesión' }));
+            dispatch(logout({ errorMessage: 'Error al iniciar sesión'}));
         }
     };
 }
@@ -71,8 +76,8 @@ export const startRegisterWithEmailAndPassword = (email, password, name) => {
             });
 
             if (!response.ok) {
-                const { error } = await response.json();
-                dispatch(logout({ errorMessage: error }));
+                const { message } = await response.json();
+                dispatch(logout({ errorMessage: message }));
                 return;
             }
 
@@ -100,5 +105,6 @@ export const startLogout = () => {
         localStorage.removeItem('name');
 
         dispatch(logout({}));
+        dispatch(clearTasksLogout());
     };
 }

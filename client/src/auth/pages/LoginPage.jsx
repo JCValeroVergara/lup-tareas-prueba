@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
 import { AuthLayout } from '../layout';
 import { AlertMessage } from '../../ui/components/AlertMessage';
-import { checkingAuthentication, starLoginWithEmailAndPassword } from '../../store/auth';
+import { starLoginWithEmailAndPassword } from '../../store/auth';
 
 const formData = {
     email: '',
@@ -26,13 +26,11 @@ export const LoginPage = () => {
     const { email, password, onInputChange, isFormValid, emailValid, passwordValid } = useForm(formData, formValidations);
 
     const isAuthenticating = useMemo(() => status === 'checking', [status]);
-    console.log('errorMessage', errorMessage);
     
     const handleSubmit = (event) => {
         event.preventDefault();
         setIsSubmitting(true);
         if (!isFormValid) return;
-        console.log({ email, password });
         dispatch(starLoginWithEmailAndPassword(email, password));
     };
 
@@ -74,6 +72,8 @@ export const LoginPage = () => {
                     </label>
                     {/* Mensaje de error para el password */}
                     {passwordValid !== null && isSubmitting && <AlertMessage errorMsg={passwordValid} />}
+                    {/* Mensaje de error del servidor */}
+                    {errorMessage && <AlertMessage errorMsg={errorMessage} />}
                 </div>
                 <div className="relative z-0 w-full mb-5 group flex items-center justify-between">
                     <button

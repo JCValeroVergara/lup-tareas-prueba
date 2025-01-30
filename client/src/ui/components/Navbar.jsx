@@ -1,9 +1,10 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { startLogout } from '../../store/auth';
 
 export const Navbar = () => {
     const dispatch = useDispatch();
+    const { name } = useSelector((state) => state.auth);
 
     const handleLogout = () => {
         dispatch(startLogout());
@@ -13,7 +14,7 @@ export const Navbar = () => {
         <>
             <div className="w-full h-14 bg-blue-600 text-white flex items-center justify-between">
                 <div className="flex items-center ml-4 text-2xl font-semibold">
-                    <h1>App Tareas de: Juan Perez</h1>
+                    <h1>App Tareas de: { name }</h1>
                 </div>
                 <div className="flex items-center mr-4">
                     <ul className='flex flex-row space-x-4 text-xl'>
