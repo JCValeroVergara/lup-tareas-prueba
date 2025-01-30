@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { useForm } from '../../hooks/useForm';
 import { AuthLayout } from '../layout';
 import { AlertMessage } from '../../ui/components/AlertMessage';
+import { checkingAuthentication, starLoginWithEmailAndPassword } from '../../store/auth';
 
 const formData = {
     email: '',
@@ -17,16 +19,21 @@ const formValidations = {
 
 
 export const LoginPage = () => {
+    const dispatch = useDispatch();
+    const { status, errorMessage } = useSelector((state) => state.auth);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { email, password, onInputChange, isFormValid, emailValid, passwordValid } = useForm(formData, formValidations);
 
+    const isAuthenticating = useMemo(() => status === 'checking', [status]);
+    console.log('errorMessage', errorMessage);
     
     const handleSubmit = (event) => {
         event.preventDefault();
         setIsSubmitting(true);
         if (!isFormValid) return;
         console.log({ email, password });
+        dispatch(starLoginWithEmailAndPassword(email, password));
     };
 
     return (
@@ -71,6 +78,7 @@ export const LoginPage = () => {
                 <div className="relative z-0 w-full mb-5 group flex items-center justify-between">
                     <button
                         type="submit"
+                        disabled={isAuthenticating}
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-32 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                         Login

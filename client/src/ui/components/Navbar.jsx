@@ -1,6 +1,14 @@
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { startLogout } from '../../store/auth';
 
 export const Navbar = () => {
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        dispatch(startLogout());
+    };
+
     return (
         <>
             <div className="w-full h-14 bg-blue-600 text-white flex items-center justify-between">
@@ -13,7 +21,10 @@ export const Navbar = () => {
                         <NavLink to='/tasks' className={({ isActive }) => isActive ? 'font-bold opacity-50' : 'font-bold'}>Tareas</NavLink>
                     </ul>
                     <div className='ml-4'>
-                        <button className='mr-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-800'>Logout</button>
+                        <button
+                            className='mr-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-800'
+                            onClick={handleLogout}
+                        >Logout</button>
                     </div>
                 </div>
             </div>
