@@ -30,9 +30,5 @@ export class CreateUserDto {
     @IsOptional()
     active?: boolean;
 
-    // @ApiProperty({ required: false, description: 'Tareas del usuario' })
-    // @IsOptional()
-    // @IsObject()
-    // tasks?: Task[];
 
 }

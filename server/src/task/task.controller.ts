@@ -42,6 +42,16 @@ export class TaskController {
         return this.taskService.findOne(id);
     }
 
+    @Get('user/:userId')
+    @ApiResponse({ status: 200, description: 'Listado de tareas del usuario' })
+    @ApiResponse({ status: 400, description: 'Error al obtener tareas del usuario' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
+        
+    async findAllByUser(@Param('userId') userId: string) {
+        return this.taskService.findAllByUser(userId);
+    }
+
     @Patch(':id')
     @ApiResponse({ status: 200, description: 'Tarea actualizada' })
     @ApiResponse({ status: 400, description: 'Error al actualizar tarea' })
