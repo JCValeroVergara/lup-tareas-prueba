@@ -14,17 +14,17 @@ export const initialSeedData: SeedData = {
         {
             email: 'prueba1@gmail.com',
             password: 'Ab1234',
-            name: 'Usuario de Prueba 1'
+            name: 'Juan Camilo Giraldo'
         },
         {
             email: 'prueba2@gmail.com',
             password: 'Ab1234',
-            name: 'Usuario de Prueba 2'
+            name: 'Maria Fernanda Vanegas'
         },
         {
             email: 'prueba3@gmail.com',
             password: 'Ab1234',
-            name: 'Usuario de Prueba 3'
+            name: 'Pedro Perez'
         }
     ]
 }
