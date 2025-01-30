@@ -14,11 +14,11 @@ export class Task {
     @Column({ type: 'text', nullable: true })
     description?: string;
 
-    @Column({ default: false })
-    isCompleted: boolean;
-
     @Column({ type: 'enum', enum: ['Sin Iniciar', 'En Proceso', 'Completada'], default: 'Sin Iniciar' })
     status: string;
+
+    @Column({ default: true })
+    active: boolean;
 
     @ManyToOne(() => (User), user => user.tasks)
     user: User;
@@ -28,5 +28,4 @@ export class Task {
 
     @UpdateDateColumn()
     updatedAt: Date;
-
 }

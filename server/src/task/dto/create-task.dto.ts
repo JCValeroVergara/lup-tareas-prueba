@@ -11,16 +11,16 @@ export class CreateTaskDto {
     @IsString()
     @IsOptional()
     description?: string;
-
-    @ApiProperty({ required: false, description: 'Estado de la tarea', default: false })
-    @IsOptional()
-    @IsBoolean()
-    isCompleted: boolean;
     
     @ApiProperty({ required: false, description: 'Estado de la tarea', enum: ['Sin Iniciar', 'En Proceso', 'Completada'] })
     @IsOptional()
     @IsIn(['Sin Iniciar', 'En Proceso', 'Completada'])
     status?: string;
+
+    @ApiProperty({ required: true, description: 'Tarea activa' })
+    @IsBoolean()
+    @IsOptional()
+    active?: boolean;
 
     @ApiProperty({ required: true, description: 'Usuario de la tarea' })
     @IsString()

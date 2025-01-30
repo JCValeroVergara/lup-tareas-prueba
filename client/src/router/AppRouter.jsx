@@ -5,7 +5,7 @@ import { AuthRoutes } from '../auth/routes';
 
 export const AppRouter = () => {
 
-    const status = 'not-authenticated'; // 'authenticated' or 'not-authenticated'
+    const status = 'authenticated'; // 'authenticated' or 'not-authenticated'
 
     return (
         <Routes>

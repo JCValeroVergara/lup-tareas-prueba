@@ -55,6 +55,16 @@ export class TaskService {
         });
     }
 
+    async findAllByUser(userId: string): Promise<Task[]> {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new BadRequestException(`Usuario con Id: ${userId} no encontrado`);
+        }
+
+        const tasks = await this.taskRepository.find({ where: { user: { id: userId } } });
+        return tasks;
+    }
+
     async findOne(id: string): Promise<Task> {
         const task = await this.findTaskById(id);
         return task;
@@ -71,10 +81,10 @@ export class TaskService {
 
     async remove(id: string) {
         await this.findTaskById(id);
-        await this.taskRepository.delete(id);
+        await this.taskRepository.update(id, { active: false });
 
         return {
-            message: `Tarea con Id: ${id} eliminada`
+            message: `Tarea con Id: ${id} desactivada`
         }
     }
 }
